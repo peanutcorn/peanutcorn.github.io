@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, MapPin } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
-import mailapi from '../../../apikey';
+// import mailapi from '../../../apikey';
 
 const Contact = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -21,9 +21,9 @@ const Contact = () => {
     if (!formRef.current) return;
 
     setIsSubmitting(true);
-    const serviceId = mailapi.serviceId;
-    const templateId = mailapi.templateId;
-    const publicKey = mailapi.publicKey;
+    const serviceId = 'mailapi.serviceId';
+    const templateId = 'mailapi.templateId';
+    const publicKey = 'mailapi.publicKey';
 
     emailjs.sendForm(serviceId, templateId, formRef.current, publicKey)
       .then(() => {
