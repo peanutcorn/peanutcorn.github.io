@@ -9,6 +9,7 @@ import {
   Terminal,
   Cpu,
 } from 'lucide-react';
+import Spline from '@splinetool/react-spline';
 
 // ──────────────────────────────────────────────
 // Custom liquid-glass cursor
@@ -34,29 +35,44 @@ const CustomCursor = () => {
       <div
         ref={cursorRef}
         className="fixed top-0 left-0 w-3 h-3 bg-orange-500 rounded-full z-[9999] pointer-events-none mix-blend-difference"
-        style={{ marginLeft: '-6px', marginTop: '-6px', transition: 'transform 0.1s ease-out' }}
+        style={{ marginLeft: '-6px', marginTop: '-6px' }}
       />
       <div
         ref={followerRef}
         className="fixed top-0 left-0 w-10 h-10 border border-white/30 bg-white/5 backdrop-blur-[2px] rounded-full z-[9998] pointer-events-none"
-        style={{ marginLeft: '-20px', marginTop: '-20px', transition: 'transform 0.5s ease-out' }}
+        style={{ marginLeft: '-20px', marginTop: '-20px' }}
       />
     </>
   );
 };
 
+// Rain-like flowing lines
 // ──────────────────────────────────────────────
+const RainEffect = () => (
+  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    {[...Array(20)].map((_, i) => (
+      <div
+        key={i}
+        className="absolute w-[1px] bg-gradient-to-b from-transparent via-orange-500 to-transparent"
+        style={{
+          left: `${80 + Math.random() * 18}%`,
+          height: `${100 + Math.random() * 200}px`,
+          opacity: 0.1 + Math.random() * 0.4,
+          top: '-20%',
+          animation: `rainFlow ${15 + Math.random() * 20}s linear ${Math.random() * 10}s infinite`,
+        }}
+      />
+    ))}
+  </div>
+);
+
 // 3-D Spline hero (impact-maximised)
 // ──────────────────────────────────────────────
 const SplineHero = () => (
   <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center overflow-hidden scale-110 md:scale-125">
-    <iframe
-      src="https://my.spline.design/roomrelaxationcopy-e766e4a66a7b73715f94d930c760237b/"
-      frameBorder={0}
-      width="100%"
-      height="100%"
-      title="Hero 3D Scene"
-      className="pointer-events-auto"
+    <Spline
+      scene="https://prod.spline.design/NvZtJtZeZI4rtU91/scene.splinecode"
+      className="w-full h-full pointer-events-none"
     />
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#050505] pointer-events-none" />
   </div>
@@ -97,10 +113,10 @@ const projects = [
 ];
 
 const skills = [
-  { icon: Code2,    label: 'Frontend',   items: 'React · Next.js · TypeScript · Tailwind' },
-  { icon: Server,   label: 'Backend',    items: 'Node.js · Spring Boot · Express · FastAPI' },
-  { icon: Database, label: 'Database',   items: 'PostgreSQL · MongoDB · Redis · Supabase' },
-  { icon: Layout,   label: 'Design',     items: 'Figma · Framer · Spline · Three.js' },
+  { icon: Code2, label: 'Frontend', items: 'React · Next.js · TypeScript · Tailwind' },
+  { icon: Server, label: 'Backend', items: 'Node.js · Spring Boot · Express · FastAPI' },
+  { icon: Database, label: 'Database', items: 'PostgreSQL · MongoDB · Redis · Supabase' },
+  { icon: Layout, label: 'Design', items: 'Figma · Framer · Spline · Three.js' },
 ];
 
 // ──────────────────────────────────────────────
@@ -118,6 +134,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden selection:bg-orange-500 selection:text-white">
       <CustomCursor />
+      <RainEffect />
 
       {/* Ambient glow blobs */}
       <div className="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none z-0 animate-[glowPulse_8s_ease-in-out_infinite]" />
@@ -125,11 +142,10 @@ export default function App() {
 
       {/* ── NAV ── */}
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-          scrolled
+        className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled
             ? 'bg-black/80 backdrop-blur-xl py-4 border-b border-white/5'
             : 'bg-transparent py-8'
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-8 flex justify-between items-center">
           <div className="text-2xl font-black tracking-tighter flex items-center gap-2">
@@ -199,9 +215,7 @@ export default function App() {
         </div>
 
         <div className="absolute bottom-12 flex flex-col items-center gap-4 text-gray-500 pointer-events-none z-10">
-          <div className="w-[1px] h-20 bg-gradient-to-b from-transparent via-orange-500/50 to-orange-500" />
           <span className="text-[10px] tracking-[0.5em] uppercase font-bold text-orange-500/70 rotate-90 origin-left ml-2 mt-4">
-            Discover
           </span>
         </div>
       </section>
@@ -275,9 +289,8 @@ export default function App() {
           {projects.map((p) => (
             <div
               key={p.id}
-              className={`group relative w-full ${
-                p.featured ? 'md:w-[30rem] h-[520px]' : 'md:w-80 h-[440px]'
-              } ${p.tilt} hover:rotate-0 hover:scale-105 transition-all duration-700 ease-out rounded-2xl overflow-hidden border border-white/10 shadow-2xl`}
+              className={`group relative w-full ${p.featured ? 'md:w-[30rem] h-[520px]' : 'md:w-80 h-[440px]'
+                } ${p.tilt} hover:rotate-0 hover:scale-105 transition-all duration-700 ease-out rounded-2xl overflow-hidden border border-white/10 shadow-2xl`}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10 opacity-90 group-hover:opacity-70 transition-opacity" />
               <img
@@ -290,9 +303,8 @@ export default function App() {
                   {p.category}
                 </p>
                 <h3
-                  className={`font-black tracking-tight mb-2 leading-[1.2] ${
-                    p.featured ? 'text-4xl' : 'text-2xl'
-                  }`}
+                  className={`font-black tracking-tight mb-2 leading-[1.2] ${p.featured ? 'text-4xl' : 'text-2xl'
+                    }`}
                 >
                   {p.title}
                 </h3>
@@ -342,11 +354,11 @@ export default function App() {
           <h2 className="text-[35vw] font-black leading-none -ml-20">BUILD</h2>
         </div>
         <div className="max-w-5xl mx-auto px-8 relative z-10">
-          <h2 className="text-5xl md:text-8xl font-black tracking-tighter mb-12 leading-[1.05] uppercase">
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter mb-12 leading-[1.05] uppercase text-black">
             Ready to launch your
             <br />
             Next{' '}
-            <span className="text-orange-600 underline decoration-[8px] underline-offset-[12px]">
+            <span className="underline decoration-[8px] underline-offset-[12px]">
               Big Idea
             </span>
             ?
